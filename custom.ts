@@ -175,6 +175,26 @@ function findIndex(img: Images): number {
     }
 }
 
+// internal function to find enumeration type from the index
+// note: if parameter is -1 return the current image as default
+function findEnum(index: number): Images {
+    if (index === -1)
+        index = currentIndex;
+    switch (index) {
+        case 0: return Images.Heart;
+        case 1: return Images.Apple;
+        case 2: return Images.Dinosaur;
+        case 3: return Images.Pacman;
+        case 4: return Images.Ghost;
+        case 5: return Images.Alien;
+        case 6: return Images.Crown;
+        case 7: return Images.Stars;
+        case 8: return Images.Rainbow;
+        case 9: return Images.Black;
+        default: return Images.Black;
+    }
+}
+
 // internal function to support showColour
 function showColourInt(pixel: number, red: number, green: number, blue: number): void {
     display.setPixelColor(pixel, neopixel.colors(neopixel.rgb(red, green, blue)))
@@ -191,10 +211,6 @@ function showImageIndex(imgIndex: number): void {
     currentPixel = 0;       // used for moving around the image
 }
 
-// --------------------------------------
-// functions relating to ZIP64  buttons
-// --------------------------------------
-
 // internal function to return array with r,g,b components from the decimal colours
 function getRGB(colour: number): number[] {
     let r = Math.floor(colour / 256 / 256);
@@ -202,6 +218,81 @@ function getRGB(colour: number): number[] {
     let b = colour % 256;
     let rgb_array = [r, g, b];
     return rgb_array;
+}
+
+
+// --------------------------------------
+// functions relating to showing cryptographic images
+// --------------------------------------
+
+// set up messages that will be hidden in each of the pre-defined images
+const steg_msgs = [
+    "cyber",
+    "forensic expert",
+    "security analyst",
+    "ethical hacker",
+    "cyber psychologist",
+    "cyber ethics consultant",
+    "security trainer",
+    "risk assessor",
+    "threat hunter",
+    "social engineering analyst"
+];
+
+
+// internal function to check if parameter is a single character
+function isLetter(s: string): boolean {
+    if (s.length === 1) {
+        return s.toLowerCase() != s.toUpperCase();
+    }
+    else
+        return false;
+}
+
+// internal function to support writeColour
+function writeColourInt(red: number, green: number, blue: number, img: Images, pixel: number): void {
+    let imgIndex = findIndex(img);
+    imagesArr[imgIndex][pixel] = neopixel.rgb(red, green, blue);
+    // display.show()
+}
+
+// internal function to support encode
+function encodeInt(letter_binary: string, img: Images, pixel: number): void {
+    // get rgb colour (as array) for given pixel of given image
+    let imgIndex = findIndex(img);
+    let colour = imagesArr[imgIndex][pixel];
+    let rgb = getRGB(colour);  // rgb is array [r, g, b]
+    let rgb_str = ["", "", ""];
+
+    for (let i = 0; i < 3; i++) {
+        rgb_str[i] = convertDecBin(rgb[i], 8);
+        rgb_str[i] = rgb_str[i].slice(0, -2); // get rid of 2 least significant bits (steganography method)
+        rgb_str[i] = rgb_str[i] + letter_binary.slice(0, 2);  // replace with part of the binary letter
+        letter_binary = letter_binary.slice(2);
+        // convert binary to integer
+        rgb[i] = convertBinDec(rgb_str[i]);
+        //basic.showString(">" + rgb[i] + "<")
+    }
+
+    // finally change the given pixel on the given image
+    writeColourInt(rgb[0], rgb[1], rgb[2], img, pixel);
+}
+
+// --------------------------------------
+// functions relating to decimal <-> binary conversions
+// --------------------------------------
+
+// internal function to switch from binary to decimal
+// note: expected num is 0..63; returned str will be 6 bit binary
+function convertBinDec(bin_num: string): number {
+    let multiplier = 1;
+    let result = 0;
+    for (let i = bin_num.length - 1; i >= 0; i--) {
+        if (bin_num[i] === "1")
+            result = result + multiplier;
+        multiplier = multiplier * 2;
+    }
+    return result;
 }
 
 // internal recursive function to convert decimal number to binary
@@ -249,6 +340,11 @@ function convertDecBin(dec_num: number, bits: number): string {
         return bin;
     }
 }
+
+
+// --------------------------------------
+// functions relating to ZIP64 buttons
+// --------------------------------------
 
 // --- CONTROL GREEN BUTTONS ---
 
@@ -336,6 +432,28 @@ GAME_ZIP64.onButtonPress(GAME_ZIP64.ZIP64ButtonPins.Up, GAME_ZIP64.ZIP64ButtonEv
 //% color="#B39EF3" weight=115
 namespace cryptsteg {
 
+    // SHOW NEXT ENCRYPTED IMAGE
+    /**
+     * showNextStegImage displays the next steganographic image
+     */
+    //% block="show next steganographic image"
+    export function showNextStegImage(): void {
+        currentIndex++;
+        currentIndex = currentIndex % imagesArr.length;
+        encode_str(steg_msgs[currentIndex], findEnum(currentIndex), 0);
+    }
+
+    // SHOW ENCRYPTED IMAGE
+    /**
+     * show a message encrypted in the given image (steganography)
+     */
+    //% block="show steganographic image $img"
+    export function showStegImg(img: Images): void {
+        currentIndex = findIndex(img);     // update currentIndex to this image
+        encode_str(steg_msgs[currentIndex], img, 0);
+    }
+
+
     // SHOW COLOUR
     /**
      * show the given rgb colour at the specified pixel 
@@ -383,5 +501,37 @@ namespace cryptsteg {
         showImageIndex(currentIndex);
     }
 
+    // Advanced functions below here ...
+
+    // ENCODE STRING
+    /**
+     * encode the string in the given image, starting at the specified pixel value
+     * @param str the string being hidden
+     * @param img the image to be used
+     * @param pixel the pixel at which to start
+     */
+    //% block="encode string $str in image $img || starting at pixel $pixel"
+    //% pixel.min=0 pixel.max=63 pixel.defl=0
+    //% str.defl="abc"
+    //% expandableArgumentMode="toggle"
+    //% advanced = true
+    //% inlineInputMode=inline
+    export function encode_str(str: string, img: Images, pixel?: number): void {
+        let num = 0;
+        let letter_binary = ""
+        for (let i = 0; i < str.length; i++) {
+            // check this character is single char, get ascii and convert to 1..26 for a-z (other chars -> 0)
+            if (isLetter(str.charAt(i).toLowerCase())) {
+                num = str.charCodeAt(i) - "a".charCodeAt(0) + 1;
+                letter_binary = convertDecBin(num, 6);
+                //basic.showString(">" + letter_binary + "<")
+
+                encodeInt(letter_binary, img, pixel + i);
+            }
+            else
+                encodeInt("000000", img, pixel + i);
+        }
+        showImage(img);
+    }
 
 }
