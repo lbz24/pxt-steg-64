@@ -503,6 +503,7 @@ namespace cryptsteg {
     export function clearDisplay(): void {
         display.clear();
         display.show();
+        currentIndex = findIndex(Images.Black);
     }
 
     // SHOW NEXT IMAGE
