@@ -278,6 +278,32 @@ function encodeInt(letter_binary: string, img: Images, pixel: number): void {
     writeColourInt(rgb[0], rgb[1], rgb[2], img, pixel);
 }
 
+// encode string
+/**
+ * encode the string in the given image, starting at the specified pixel value
+ * @param str the string being hidden
+ * @param img the image to be used
+ * @param pixel the pixel at which to start
+ */
+function encodeStr(str: string, img: Images, pixel: number): void {
+    let num = 0;
+    let letter_binary = ""
+    for (let i = 0; i < str.length; i++) {
+        // check this character is single char, get ascii and convert to 1..26 for a-z (other chars -> 0)
+        if (isLetter(str.charAt(i).toLowerCase())) {
+            num = str.charCodeAt(i) - "a".charCodeAt(0) + 1;
+            letter_binary = convertDecBin(num, 6);
+            //basic.showString(">" + letter_binary + "<")
+
+            encodeInt(letter_binary, img, pixel + i);
+        }
+        else
+            encodeInt("000000", img, pixel + i);
+    }
+    currentIndex = findIndex(img);     // update currentIndex to this image
+    showImageIndex(currentIndex);
+}
+
 // --------------------------------------
 // functions relating to decimal <-> binary conversions
 // --------------------------------------
@@ -440,7 +466,7 @@ namespace cryptsteg {
     export function showNextStegImage(): void {
         currentIndex++;
         currentIndex = currentIndex % imagesArr.length;
-        encode_str(steg_msgs[currentIndex], findEnum(currentIndex), 0);
+        encodeStr(steg_msgs[currentIndex], findEnum(currentIndex), 0);
     }
 
     // SHOW ENCRYPTED IMAGE
@@ -450,7 +476,7 @@ namespace cryptsteg {
     //% block="show steganographic image $img"
     export function showStegImg(img: Images): void {
         currentIndex = findIndex(img);     // update currentIndex to this image
-        encode_str(steg_msgs[currentIndex], img, 0);
+        encodeStr(steg_msgs[currentIndex], img, 0);
     }
 
 
@@ -501,37 +527,6 @@ namespace cryptsteg {
         showImageIndex(currentIndex);
     }
 
-    // Advanced functions below here ...
-
-    // ENCODE STRING
-    /**
-     * encode the string in the given image, starting at the specified pixel value
-     * @param str the string being hidden
-     * @param img the image to be used
-     * @param pixel the pixel at which to start
-     */
-    //% block="encode string $str in image $img || starting at pixel $pixel"
-    //% pixel.min=0 pixel.max=63 pixel.defl=0
-    //% str.defl="abc"
-    //% expandableArgumentMode="toggle"
-    //% advanced = true
-    //% inlineInputMode=inline
-    export function encode_str(str: string, img: Images, pixel?: number): void {
-        let num = 0;
-        let letter_binary = ""
-        for (let i = 0; i < str.length; i++) {
-            // check this character is single char, get ascii and convert to 1..26 for a-z (other chars -> 0)
-            if (isLetter(str.charAt(i).toLowerCase())) {
-                num = str.charCodeAt(i) - "a".charCodeAt(0) + 1;
-                letter_binary = convertDecBin(num, 6);
-                //basic.showString(">" + letter_binary + "<")
-
-                encodeInt(letter_binary, img, pixel + i);
-            }
-            else
-                encodeInt("000000", img, pixel + i);
-        }
-        showImage(img);
-    }
+    
 
 }
