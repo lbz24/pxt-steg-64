@@ -215,6 +215,18 @@ function showImageIndex(imgIndex: number): void {
 
 //% color="#B39EF3" weight=115
 namespace cryptsteg {
+
+    // SHOW NEXT IMAGE
+    /**
+     * showNextImage displays the next of the pre-defined images on the Zip64 leds
+     */
+    //% block
+    export function showNextImage(): void {
+        currentIndex++;
+        currentIndex = currentIndex % imagesArr.length;
+        showImageIndex(currentIndex);
+    }
+
     // SHOW IMAGE
     /**
      * showImage displays the selected image on the Zip64 leds
