@@ -4,27 +4,27 @@ let scrollSpeed = 180;  // scroll speed for show_string
 
 // set up colours used in pre-defined images
 // note: make each colour divisble by 4 => least 2 significant bits of the binary will be zero
-let w = neopixel.rgb(252, 252, 252);    // white
-let b = neopixel.rgb(0, 0, 0);          // black
-let gr = neopixel.rgb(180, 180, 180);   // grey
-let dgr = neopixel.rgb(100, 100, 100);  // dark grey
-let lr = neopixel.rgb(40, 0, 0);        // red
-let r = neopixel.rgb(252, 0, 0);        // red
-let o = neopixel.rgb(200, 100, 0);      // orange
-let y = neopixel.rgb(252, 252, 0);      // yellow
-let g = neopixel.rgb(0, 252, 0);        // green
-let lg = neopixel.rgb(180, 252, 0);     // light green
-let dg = neopixel.rgb(0, 60, 0);        // dark green
-let lbl = neopixel.rgb(52, 180, 252);   // light blue
-let bl = neopixel.rgb(0, 100, 152);     // blue
-let dbl = neopixel.rgb(0, 0, 52);       // dark blue
-let ind = neopixel.rgb(120, 120, 252);  // indigo
-let br = neopixel.rgb(160, 112, 12);    // brown
-let p = neopixel.rgb(252, 100, 252);    // pink
-let pu = neopixel.rgb(160, 32, 240);    // purple
+const w = neopixel.rgb(252, 252, 252);    // white
+const b = neopixel.rgb(0, 0, 0);          // black
+const gr = neopixel.rgb(180, 180, 180);   // grey
+const dgr = neopixel.rgb(100, 100, 100);  // dark grey
+const lr = neopixel.rgb(40, 0, 0);        // red
+const r = neopixel.rgb(252, 0, 0);        // red
+const o = neopixel.rgb(200, 100, 0);      // orange
+const y = neopixel.rgb(252, 252, 0);      // yellow
+const g = neopixel.rgb(0, 252, 0);        // green
+const lg = neopixel.rgb(180, 252, 0);     // light green
+const dg = neopixel.rgb(0, 60, 0);        // dark green
+const lbl = neopixel.rgb(52, 180, 252);   // light blue
+const bl = neopixel.rgb(0, 100, 152);     // blue
+const dbl = neopixel.rgb(0, 0, 52);       // dark blue
+const ind = neopixel.rgb(120, 120, 252);  // indigo
+const br = neopixel.rgb(160, 112, 12);    // brown
+const p = neopixel.rgb(252, 100, 252);    // pink
+const pu = neopixel.rgb(160, 32, 240);    // purple
 
 // set up pre-defined images
-let heart = [
+const heart = [
     b, b, b, b, b, b, b, b,
     b, b, r, r, b, r, r, b,
     b, r, y, o, r, r, r, r,
@@ -34,7 +34,7 @@ let heart = [
     b, b, b, b, r, b, b, b,
     b, b, b, b, b, b, b, b];
 
-let apple = [
+const apple = [
     b, b, b, br, br, b, b, b,
     b, b, b, b, br, b, b, b,
     b, r, r, r, b, r, r, b,
@@ -44,7 +44,7 @@ let apple = [
     b, r, r, r, r, b, r, b,
     b, b, r, r, b, r, b, b];
 
-let dinosaur = [
+const dinosaur = [
     b, dg, dg, dg, dg, b, b, b,
     dg, b, dg, b, dg, b, b, b,
     dg, dg, dg, dg, dg, b, b, b,
@@ -54,7 +54,7 @@ let dinosaur = [
     b, b, lg, lg, dg, g, g, b,
     b, b, g, b, dg, b, b, b];
 
-let pacman = [
+const pacman = [
     b, b, y, y, y, y, dgr, b,
     b, y, y, y, y, y, y, dgr,
     y, y, y, y, y, dgr, b, b,
@@ -64,7 +64,7 @@ let pacman = [
     b, y, y, y, y, y, y, dgr,
     b, b, y, y, y, y, dgr, b];
 
-let ghost = [
+const ghost = [
     b, b, pu, ind, ind, lbl, b, b,
     b, pu, ind, ind, bl, bl, lbl, b,
     b, ind, ind, bl, bl, bl, bl, lbl,
@@ -74,7 +74,7 @@ let ghost = [
     ind, ind, ind, bl, bl, bl, bl, bl,
     ind, ind, b, bl, bl, b, bl, bl];
 
-let alien = [
+const alien = [
     lbl, bl, dbl, b, b, dbl, bl, lbl,
     b, b, dbl, bl, bl, dbl, b, b,
     b, b, bl, bl, bl, bl, b, b,
@@ -84,7 +84,7 @@ let alien = [
     b, dbl, dbl, b, b, dbl, dbl, b,
     b, b, bl, b, b, bl, b, b];
 
-let crown = [
+const crown = [
     pu, b, b, pu, b, b, b, pu,
     bl, pu, b, bl, pu, b, bl, pu,
     bl, bl, bl, bl, bl, bl, bl, pu,
@@ -94,7 +94,7 @@ let crown = [
     dbl, dbl, dbl, dbl, dbl, dbl, dbl, pu,
     b, b, b, b, b, b, b, b];
 
-let stars = [
+const stars = [
     b, b, b, b, b, b, o, b,
     b, b, b, b, b, o, y, r,
     b, o, b, b, b, b, r, b,
@@ -104,7 +104,7 @@ let stars = [
     b, b, b, b, b, r, b, b,
     b, b, b, b, b, b, b, b];
 
-let rainbow_vert = [
+const rainbow_vert = [
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b,
@@ -114,7 +114,7 @@ let rainbow_vert = [
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b];
 
-let black = [
+const black = [
     b, b, b, b, b, b, b, b,
     b, b, b, b, b, b, b, b,
     b, b, b, b, b, b, b, b,
@@ -126,8 +126,8 @@ let black = [
 
 
 // set up arrays of images
-let imagesArr = [heart, apple, dinosaur, pacman, ghost, alien, crown, stars, rainbow_vert, black];
-let namesArr = ["heart", "apple", "dinosaur", "pacman", "ghost", "alien", "crown", "stars", "rainbow", "black"];
+const imagesArr = [heart, apple, dinosaur, pacman, ghost, alien, crown, stars, rainbow_vert, black];
+const namesArr = ["heart", "apple", "dinosaur", "pacman", "ghost", "alien", "crown", "stars", "rainbow", "black"];
 let currentIndex = 0;
 let currentPixel = 0;
 
@@ -154,6 +154,31 @@ enum Images {
     //% block="black"
     Black
 }
+
+// allow a deep copy (dc) of the image to be created for the steg encoding
+function dc(img: Images): number[] {
+    let imgIndex = findIndex(img);
+    let thisImg: number[] = [];
+    // reset the colours to those from original image (deep copy)
+    for (let i = 0; i < num_pixels; i++) {
+        thisImg[i] = imagesArr[imgIndex][i];
+    }
+    return thisImg;
+}
+
+// set up copies of images - for the steg encoding
+let heart_steg = dc(Images.Heart);
+let apple_steg = dc(Images.Apple);
+let dinosaur_steg = dc(Images.Dinosaur);
+let pacman_steg = dc(Images.Pacman);
+let ghost_steg = dc(Images.Ghost);
+let alien_steg = dc(Images.Alien);
+let crown_steg = dc(Images.Crown);
+let stars_steg = dc(Images.Stars);
+let rainbow_steg = dc(Images.Rainbow);
+let black_steg = dc(Images.Black);
+
+let stegImagesArr = [heart_steg, apple_steg, dinosaur_steg, pacman_steg, ghost_steg, alien_steg, crown_steg, stars_steg, rainbow_steg, black_steg];
 
 //--
 
@@ -249,17 +274,9 @@ function isLetter(s: string): boolean {
         return false;
 }
 
-// internal function to support writeColour
-function writeColourInt(red: number, green: number, blue: number, img: Images, pixel: number): void {
-    let imgIndex = findIndex(img);
-    imagesArr[imgIndex][pixel] = neopixel.rgb(red, green, blue);
-    // display.show()
-}
-
 // internal function to support encode
-function encodeInt(letter_binary: string, img: Images, pixel: number): void {
+function encodeInt(letter_binary: string, imgIndex: number, pixel: number): void {
     // get rgb colour (as array) for given pixel of given image
-    let imgIndex = findIndex(img);
     let colour = imagesArr[imgIndex][pixel];
     let rgb = getRGB(colour);  // rgb is array [r, g, b]
     let rgb_str = ["", "", ""];
@@ -274,8 +291,8 @@ function encodeInt(letter_binary: string, img: Images, pixel: number): void {
         //basic.showString(">" + rgb[i] + "<")
     }
 
-    // finally change the given pixel on the given image
-    writeColourInt(rgb[0], rgb[1], rgb[2], img, pixel);
+    // write the new encoded values at the given pixel
+    stegImagesArr[imgIndex][pixel] = neopixel.rgb(rgb[0], rgb[1], rgb[2]);
 }
 
 // encode string
@@ -286,6 +303,7 @@ function encodeInt(letter_binary: string, img: Images, pixel: number): void {
  * @param pixel the pixel at which to start
  */
 function encodeStr(str: string, img: Images, pixel: number): void {
+    currentIndex = findIndex(img);     // update currentIndex to this image
     let num = 0;
     let letter_binary = ""
     for (let i = 0; i < str.length; i++) {
@@ -295,12 +313,11 @@ function encodeStr(str: string, img: Images, pixel: number): void {
             letter_binary = convertDecBin(num, 6);
             //basic.showString(">" + letter_binary + "<")
 
-            encodeInt(letter_binary, img, pixel + i);
+            encodeInt(letter_binary, currentIndex, pixel + i);
         }
         else
-            encodeInt("000000", img, pixel + i);
+            encodeInt("000000", currentIndex, pixel + i);
     }
-    currentIndex = findIndex(img);     // update currentIndex to this image
     showImageIndex(currentIndex);
 }
 
