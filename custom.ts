@@ -24,7 +24,7 @@ const p = neopixel.rgb(252, 100, 252);    // pink
 const pu = neopixel.rgb(160, 32, 240);    // purple
 
 // set up pre-defined images
-const orig_heart = [
+const heart = [
     b, b, b, b, b, b, b, b,
     b, b, r, r, b, r, r, b,
     b, r, y, o, r, r, r, r,
@@ -34,7 +34,7 @@ const orig_heart = [
     b, b, b, b, r, b, b, b,
     b, b, b, b, b, b, b, b];
 
-const orig_apple = [
+const apple = [
     b, b, b, br, br, b, b, b,
     b, b, b, b, br, b, b, b,
     b, r, r, r, b, r, r, b,
@@ -44,7 +44,7 @@ const orig_apple = [
     b, r, r, r, r, b, r, b,
     b, b, r, r, b, r, b, b];
 
-const orig_dinosaur = [
+const dinosaur = [
     b, dg, dg, dg, dg, b, b, b,
     dg, b, dg, b, dg, b, b, b,
     dg, dg, dg, dg, dg, b, b, b,
@@ -54,7 +54,7 @@ const orig_dinosaur = [
     b, b, lg, lg, dg, g, g, b,
     b, b, g, b, dg, b, b, b];
 
-const orig_pacman = [
+const pacman = [
     b, b, y, y, y, y, dgr, b,
     b, y, y, y, y, y, y, dgr,
     y, y, y, y, y, dgr, b, b,
@@ -64,7 +64,7 @@ const orig_pacman = [
     b, y, y, y, y, y, y, dgr,
     b, b, y, y, y, y, dgr, b];
 
-const orig_ghost = [
+const ghost = [
     b, b, pu, ind, ind, lbl, b, b,
     b, pu, ind, ind, bl, bl, lbl, b,
     b, ind, ind, bl, bl, bl, bl, lbl,
@@ -74,7 +74,7 @@ const orig_ghost = [
     ind, ind, ind, bl, bl, bl, bl, bl,
     ind, ind, b, bl, bl, b, bl, bl];
 
-const orig_alien = [
+const alien = [
     lbl, bl, dbl, b, b, dbl, bl, lbl,
     b, b, dbl, bl, bl, dbl, b, b,
     b, b, bl, bl, bl, bl, b, b,
@@ -84,7 +84,7 @@ const orig_alien = [
     b, dbl, dbl, b, b, dbl, dbl, b,
     b, b, bl, b, b, bl, b, b];
 
-const orig_crown = [
+const crown = [
     pu, b, b, pu, b, b, b, pu,
     bl, pu, b, bl, pu, b, bl, pu,
     bl, bl, bl, bl, bl, bl, bl, pu,
@@ -94,7 +94,7 @@ const orig_crown = [
     dbl, dbl, dbl, dbl, dbl, dbl, dbl, pu,
     b, b, b, b, b, b, b, b];
 
-const orig_stars = [
+const stars = [
     b, b, b, b, b, b, o, b,
     b, b, b, b, b, o, y, r,
     b, o, b, b, b, b, r, b,
@@ -104,7 +104,7 @@ const orig_stars = [
     b, b, b, b, b, r, b, b,
     b, b, b, b, b, b, b, b];
 
-const orig_rainbow_vert = [
+const rainbow_vert = [
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b,
@@ -114,7 +114,7 @@ const orig_rainbow_vert = [
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b];
 
-const orig_black = [
+const black = [
     b, b, b, b, b, b, b, b,
     b, b, b, b, b, b, b, b,
     b, b, b, b, b, b, b, b,
@@ -124,9 +124,8 @@ const orig_black = [
     b, b, b, b, b, b, b, b,
     b, b, b, b, b, b, b, b];
 
-
 // set up arrays of images
-const origImagesArr = [orig_heart, orig_apple, orig_dinosaur, orig_pacman, orig_ghost, orig_alien, orig_crown, orig_stars, orig_rainbow_vert, orig_black];
+const imagesArr = [heart, apple, dinosaur, pacman, ghost, alien, crown, stars, rainbow_vert, black];
 const namesArr = ["heart", "apple", "dinosaur", "pacman", "ghost", "alien", "crown", "stars", "rainbow", "black"];
 let currentIndex = 0;
 let currentPixel = 0;
@@ -155,16 +154,17 @@ enum Images {
     Black
 }
 
-// allow a deep copy (dc) of the image to be created to allow changes and resetting
-function dc(imgIndex: number): number[] {
+// create (deep) copy of image - this is what will be displayed
+function copyImg(imgIndex: number): number[] {
     let thisImg: number[] = [];
     // reset the colours to those from original image (deep copy)
     for (let i = 0; i < num_pixels; i++) {
-        thisImg[i] = origImagesArr[imgIndex][i];
+        thisImg[i] = imagesArr[imgIndex][i];
     }
     return thisImg;
 }
 
+/*
 // set up copies of images - to allow changes/resetting
 let heart = dc(findIndex(Images.Heart));
 let apple = dc(findIndex(Images.Apple));
@@ -178,7 +178,7 @@ let rainbow = dc(findIndex(Images.Rainbow));
 let black = dc(findIndex(Images.Black));
 
 let imagesArr = [heart, apple, dinosaur, pacman, ghost, alien, crown, stars, rainbow, black];
-
+*/
 //--
 
 // internal function to find array index from the enumeration type
@@ -232,7 +232,7 @@ function showImageIndex(imgIndex: number): void {
         display.setPixelColor(i, thisImg[i]);
     }
     display.show();
-    currentPixel = 0;       // used for moving around the image
+    //currentPixel = 0;       // used for moving around the image
 }
 
 // internal function to return array with r,g,b components from the decimal colours
@@ -273,10 +273,9 @@ function isLetter(s: string): boolean {
 }
 
 // internal function to support encode string
-function encodeInt(letter_binary: string, imgIndex: number, pixel: number): void {
+function encodePixel(letter_binary: string, pixel_colour: number): NeoPixelColors {
     // get rgb colour (as array) for given pixel of given image
-    let colour = imagesArr[imgIndex][pixel];
-    let rgb = getRGB(colour);  // rgb is array [r, g, b]
+    let rgb = getRGB(pixel_colour);  // rgb is array [r, g, b]
     let rgb_str = ["", "", ""];
 
     for (let i = 0; i < 3; i++) {
@@ -289,8 +288,8 @@ function encodeInt(letter_binary: string, imgIndex: number, pixel: number): void
         //basic.showString(">" + rgb[i] + "<")
     }
 
-    // write the new encoded values at the given pixel
-    imagesArr[imgIndex][pixel] = neopixel.rgb(rgb[0], rgb[1], rgb[2]);
+    // return the new encoded values at the given pixel
+    return neopixel.rgb(rgb[0], rgb[1], rgb[2]);
 }
 
 // encode string
@@ -302,6 +301,8 @@ function encodeInt(letter_binary: string, imgIndex: number, pixel: number): void
  */
 function encodeStr(str: string, img: Images, pixel: number): void {
     currentIndex = findIndex(img);     // update currentIndex to this image
+    let img_copy = copyImg(currentIndex)
+    let this_colour: NeoPixelColors
     let num = 0;
     let letter_binary = ""
     for (let i = 0; i < str.length; i++) {
@@ -311,12 +312,17 @@ function encodeStr(str: string, img: Images, pixel: number): void {
             letter_binary = convertDecBin(num, 6);
             //basic.showString(">" + letter_binary + "<")
 
-            encodeInt(letter_binary, currentIndex, pixel + i);
+            this_colour = encodePixel(letter_binary, img_copy[pixel + i]);
         }
         else
-            encodeInt("000000", currentIndex, pixel + i);
+            this_colour = encodePixel("000000", img_copy[pixel + i]);
+        img_copy[i] = this_colour;
     }
-    showImageIndex(currentIndex);
+    for (let i = 0; i < num_pixels; i++) {
+        display.setPixelColor(i, img_copy[i]);
+    }
+    display.show();
+
 }
 
 // --------------------------------------
@@ -380,14 +386,6 @@ function convertDecBin(dec_num: number, bits: number): string {
             bin = "0" + bin;
         return bin;
     }
-}
-
-// internal function to reset an image to its original (unencoded) form
-function resetImage(imgIndex: number): void {
-    imagesArr[imgIndex] = dc(imgIndex);
-    basic.showIcon(IconNames.No);   // show x to indicate img has been reset
-    basic.pause(100);
-    basic.clearScreen();
 }
 
 // --------------------------------------
@@ -536,7 +534,6 @@ namespace cryptsteg {
     export function showNextImage(): void {
         currentIndex++;
         currentIndex = currentIndex % imagesArr.length;
-        resetImage(currentIndex);
         showImageIndex(currentIndex);
     }
 
@@ -548,10 +545,7 @@ namespace cryptsteg {
     //% block
     export function showImage(img: Images): void {
         currentIndex = findIndex(img);     // update currentIndex to this image
-        resetImage(currentIndex);
         showImageIndex(currentIndex);
     }
-
-    
 
 }
