@@ -24,7 +24,7 @@ const p = neopixel.rgb(252, 100, 252);    // pink
 const pu = neopixel.rgb(160, 32, 240);    // purple
 
 // set up pre-defined images
-const heart = [
+const orig_heart = [
     b, b, b, b, b, b, b, b,
     b, b, r, r, b, r, r, b,
     b, r, y, o, r, r, r, r,
@@ -34,7 +34,7 @@ const heart = [
     b, b, b, b, r, b, b, b,
     b, b, b, b, b, b, b, b];
 
-const apple = [
+const orig_apple = [
     b, b, b, br, br, b, b, b,
     b, b, b, b, br, b, b, b,
     b, r, r, r, b, r, r, b,
@@ -44,7 +44,7 @@ const apple = [
     b, r, r, r, r, b, r, b,
     b, b, r, r, b, r, b, b];
 
-const dinosaur = [
+const orig_dinosaur = [
     b, dg, dg, dg, dg, b, b, b,
     dg, b, dg, b, dg, b, b, b,
     dg, dg, dg, dg, dg, b, b, b,
@@ -54,7 +54,7 @@ const dinosaur = [
     b, b, lg, lg, dg, g, g, b,
     b, b, g, b, dg, b, b, b];
 
-const pacman = [
+const orig_pacman = [
     b, b, y, y, y, y, dgr, b,
     b, y, y, y, y, y, y, dgr,
     y, y, y, y, y, dgr, b, b,
@@ -64,7 +64,7 @@ const pacman = [
     b, y, y, y, y, y, y, dgr,
     b, b, y, y, y, y, dgr, b];
 
-const ghost = [
+const orig_ghost = [
     b, b, pu, ind, ind, lbl, b, b,
     b, pu, ind, ind, bl, bl, lbl, b,
     b, ind, ind, bl, bl, bl, bl, lbl,
@@ -74,7 +74,7 @@ const ghost = [
     ind, ind, ind, bl, bl, bl, bl, bl,
     ind, ind, b, bl, bl, b, bl, bl];
 
-const alien = [
+const orig_alien = [
     lbl, bl, dbl, b, b, dbl, bl, lbl,
     b, b, dbl, bl, bl, dbl, b, b,
     b, b, bl, bl, bl, bl, b, b,
@@ -84,7 +84,7 @@ const alien = [
     b, dbl, dbl, b, b, dbl, dbl, b,
     b, b, bl, b, b, bl, b, b];
 
-const crown = [
+const orig_crown = [
     pu, b, b, pu, b, b, b, pu,
     bl, pu, b, bl, pu, b, bl, pu,
     bl, bl, bl, bl, bl, bl, bl, pu,
@@ -94,7 +94,7 @@ const crown = [
     dbl, dbl, dbl, dbl, dbl, dbl, dbl, pu,
     b, b, b, b, b, b, b, b];
 
-const stars = [
+const orig_stars = [
     b, b, b, b, b, b, o, b,
     b, b, b, b, b, o, y, r,
     b, o, b, b, b, b, r, b,
@@ -104,7 +104,7 @@ const stars = [
     b, b, b, b, b, r, b, b,
     b, b, b, b, b, b, b, b];
 
-const rainbow_vert = [
+const orig_rainbow_vert = [
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b,
@@ -114,7 +114,7 @@ const rainbow_vert = [
     r, o, y, g, lbl, bl, ind, b,
     r, o, y, g, lbl, bl, ind, b];
 
-const black = [
+const orig_black = [
     b, b, b, b, b, b, b, b,
     b, b, b, b, b, b, b, b,
     b, b, b, b, b, b, b, b,
@@ -126,7 +126,7 @@ const black = [
 
 
 // set up arrays of images
-const imagesArr = [heart, apple, dinosaur, pacman, ghost, alien, crown, stars, rainbow_vert, black];
+const origImagesArr = [orig_heart, orig_apple, orig_dinosaur, orig_pacman, orig_ghost, orig_alien, orig_crown, orig_stars, orig_rainbow_vert, orig_black];
 const namesArr = ["heart", "apple", "dinosaur", "pacman", "ghost", "alien", "crown", "stars", "rainbow", "black"];
 let currentIndex = 0;
 let currentPixel = 0;
@@ -155,30 +155,29 @@ enum Images {
     Black
 }
 
-// allow a deep copy (dc) of the image to be created for the steg encoding
-function dc(img: Images): number[] {
-    let imgIndex = findIndex(img);
+// allow a deep copy (dc) of the image to be created to allow changes and resetting
+function dc(imgIndex: number): number[] {
     let thisImg: number[] = [];
     // reset the colours to those from original image (deep copy)
     for (let i = 0; i < num_pixels; i++) {
-        thisImg[i] = imagesArr[imgIndex][i];
+        thisImg[i] = origImagesArr[imgIndex][i];
     }
     return thisImg;
 }
 
-// set up copies of images - for the steg encoding
-let heart_steg = dc(Images.Heart);
-let apple_steg = dc(Images.Apple);
-let dinosaur_steg = dc(Images.Dinosaur);
-let pacman_steg = dc(Images.Pacman);
-let ghost_steg = dc(Images.Ghost);
-let alien_steg = dc(Images.Alien);
-let crown_steg = dc(Images.Crown);
-let stars_steg = dc(Images.Stars);
-let rainbow_steg = dc(Images.Rainbow);
-let black_steg = dc(Images.Black);
+// set up copies of images - to allow changes/resetting
+let heart = dc(findIndex(Images.Heart));
+let apple = dc(findIndex(Images.Apple));
+let dinosaur = dc(findIndex(Images.Dinosaur));
+let pacman = dc(findIndex(Images.Pacman));
+let ghost = dc(findIndex(Images.Ghost));
+let alien = dc(findIndex(Images.Alien));
+let crown = dc(findIndex(Images.Crown));
+let stars = dc(findIndex(Images.Stars));
+let rainbow = dc(findIndex(Images.Rainbow));
+let black = dc(findIndex(Images.Black));
 
-let stegImagesArr = [heart_steg, apple_steg, dinosaur_steg, pacman_steg, ghost_steg, alien_steg, crown_steg, stars_steg, rainbow_steg, black_steg];
+let imagesArr = [heart, apple, dinosaur, pacman, ghost, alien, crown, stars, rainbow, black];
 
 //--
 
@@ -220,7 +219,7 @@ function findEnum(index: number): Images {
     }
 }
 
-// internal function to support showColour
+// internal function to support showColour block
 function showColourInt(pixel: number, red: number, green: number, blue: number): void {
     display.setPixelColor(pixel, neopixel.colors(neopixel.rgb(red, green, blue)))
     display.show()
@@ -264,7 +263,6 @@ const steg_msgs = [
     "social engineering analyst"
 ];
 
-
 // internal function to check if parameter is a single character
 function isLetter(s: string): boolean {
     if (s.length === 1) {
@@ -274,7 +272,7 @@ function isLetter(s: string): boolean {
         return false;
 }
 
-// internal function to support encode
+// internal function to support encode string
 function encodeInt(letter_binary: string, imgIndex: number, pixel: number): void {
     // get rgb colour (as array) for given pixel of given image
     let colour = imagesArr[imgIndex][pixel];
@@ -292,7 +290,7 @@ function encodeInt(letter_binary: string, imgIndex: number, pixel: number): void
     }
 
     // write the new encoded values at the given pixel
-    stegImagesArr[imgIndex][pixel] = neopixel.rgb(rgb[0], rgb[1], rgb[2]);
+    imagesArr[imgIndex][pixel] = neopixel.rgb(rgb[0], rgb[1], rgb[2]);
 }
 
 // encode string
@@ -384,6 +382,13 @@ function convertDecBin(dec_num: number, bits: number): string {
     }
 }
 
+// internal function to reset an image to its original (unencoded) form
+function resetImage(imgIndex: number): void {
+    imagesArr[imgIndex] = dc(imgIndex);
+    basic.showIcon(IconNames.No);   // show x to indicate img has been reset
+    basic.pause(100);
+    basic.clearScreen();
+}
 
 // --------------------------------------
 // functions relating to ZIP64 buttons
@@ -531,17 +536,19 @@ namespace cryptsteg {
     export function showNextImage(): void {
         currentIndex++;
         currentIndex = currentIndex % imagesArr.length;
+        resetImage(currentIndex);
         showImageIndex(currentIndex);
     }
 
     // SHOW IMAGE
     /**
-     * showImage displays the selected image on the Zip64 leds
+     * showImage displays the selected (original) image on the Zip64 leds
      * @param img the image to be displayed
      */
     //% block
     export function showImage(img: Images): void {
         currentIndex = findIndex(img);     // update currentIndex to this image
+        resetImage(currentIndex);
         showImageIndex(currentIndex);
     }
 
