@@ -191,9 +191,9 @@ function showImageIndex(imgIndex: number): void {
     currentPixel = 0;       // used for moving around the image
 }
 
-// *************************************
+// --------------------------------------
 // functions relating to ZIP64  buttons
-// *************************************
+// --------------------------------------
 
 // internal function to return array with r,g,b components from the decimal colours
 function getRGB(colour: number): number[] {
@@ -327,10 +327,11 @@ GAME_ZIP64.onButtonPress(GAME_ZIP64.ZIP64ButtonPins.Up, GAME_ZIP64.ZIP64ButtonEv
 })
 
 
-// --
+// --------------------------------------
 /**
  * Custom blocks for Cryptography - Steganography
  */
+// --------------------------------------
 
 //% color="#B39EF3" weight=115
 namespace cryptsteg {
