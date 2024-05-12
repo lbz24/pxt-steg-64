@@ -157,15 +157,9 @@ enum Images {
 
 //--
 
-// set a pixel colour on the Zip64 display
-function showRGBPixel(pixel: number, red: number, green: number, blue: number): void {
-    display.setPixelColor(pixel, neopixel.colors(neopixel.rgb(red, green, blue)))
-    display.show()
-}
-
 // find image from the enumeration type
 // note: tried Object.values and keys but "property does not exist"
-function findImg(img: Images): number[] {
+function findImage(img: Images): number[] {
     switch (img) {
         case Images.Heart: return heart;
         case Images.Apple: return apple;
@@ -195,31 +189,45 @@ function findIndex(img: Images): number {
         case Images.Stars: return 7;
         case Images.Rainbow: return 8;
         case Images.Black: return 9;
-        default: return -1;
+        default: return 9;
     }
 }
 
+// display an image on the Zip64 leds
+// note: this updates the current index and the current image
+function displayImage(index: number, img: number[]): void {
+    currentIndex = index;       // update current index
+    currentImage = img;         // update current image
 
-// find enumeration type from the index
-// note: if parameter is -1 return the current image as default
-/*function findEnum(index: number): Images {
-    if (index === -1)
-        index = currentIndex;
-    switch (index) {
-        case 0: return Images.Heart;
-        case 1: return Images.Apple;
-        case 2: return Images.Dinosaur;
-        case 3: return Images.Pacman;
-        case 4: return Images.Ghost;
-        case 5: return Images.Alien;
-        case 6: return Images.Crown;
-        case 7: return Images.Stars;
-        case 8: return Images.Rainbow;
-        case 9: return Images.Black;
-        default: return Images.Black;
+    // set the leds on the Zip64
+    for (let i = 0; i < num_pixels; i++) {
+        display.setPixelColor(i, img[i]);
     }
+    display.show();
 }
-*/
+
+// clears the Zip64 display (turns all leds black)
+// note: this updates the current index and the current image
+function displayClear(): void {
+    currentIndex = findIndex(Images.Black);
+    currentImage = findImage(Images.Black);
+    displayImage(currentIndex, currentImage);
+}
+
+// find the next index (based on length of images array)
+function findNextIndex(index: number): number {
+    let nextIndex = index++;
+    nextIndex = nextIndex % imagesArr.length;
+    return nextIndex;
+}
+
+// display the next image (from images array) on the Zip64 leds
+function displayNextImage(): void {
+    let nextIndex = findNextIndex(currentIndex);
+    let nextImage = imagesArr[nextIndex];
+
+    displayImage(nextIndex, nextImage);
+}
 
 // create a (deep) copy of an image
 function copyImg(img: number[]): number[] {
@@ -231,38 +239,10 @@ function copyImg(img: number[]): number[] {
     return thisImg;
 }
 
-// display an image on the Zip64 leds
-function displayImage(img: number[]): void {
-    for (let i = 0; i < num_pixels; i++) {
-        display.setPixelColor(i, img[i]);
-    }
-    display.show();
-    //update current index and current image
-    currentImage = img;
-    
-}
-
-// find the next index (based on length of images array)
-// note: doesn't update currentIndex or currentImage
-function findNextIndex(): number {
-    nextIndex = currentIndex++;
-    nextIndex = currentIndex % imagesArr.length;
-    return nextIndex;
-}
-
-// display the next image (from those images array) on the Zip64 leds
-function displayNextImage(): void {
-    displayImage(imagesArr[findNextIndex]);
-    for (let i = 0; i < num_pixels; i++) {
-        display.setPixelColor(i, img[i]);
-    }
-    display.show();
-}
-
-// display an image by its index number
-function showImageIndex(imgIndex: number): void {
-    let thisImg = imagesArr[imgIndex];
-    showImageOnDisplay(thisImg);
+// set a pixel colour on the Zip64 display
+function showRGBPixel(pixel: number, red: number, green: number, blue: number): void {
+    display.setPixelColor(pixel, neopixel.colors(neopixel.rgb(red, green, blue)))
+    display.show()
 }
 
 // return array with r,g,b components from the decimal colours
@@ -273,7 +253,6 @@ function getRGB(colour: number): number[] {
     let rgb_array = [r, g, b];
     return rgb_array;
 }
-
 
 // --------------------------------------
 // functions relating to showing cryptographic images
@@ -322,12 +301,13 @@ function encodePixel(letter_binary: string, pixel_colour: number): NeoPixelColor
     return neopixel.rgb(rgb[0], rgb[1], rgb[2]);
 }
 
-// encode the string in the given image, starting at the specified pixel
-function encodeStr(str: string, img: number[], pixel: number): void {
-    currentImage = copyImg(img)
-    let this_colour: NeoPixelColors
+// display a steganographic image on the Zip64 leds 
+// - this encodes the string in the given image starting at the specified pixel
+function displayStegImage(str: string, index:number, img: number[], pixel: number): void {
+    let stegImage = copyImg(img);
+    let this_colour: NeoPixelColors;
     let num = 0;
-    let letter_binary = ""
+    let letter_binary = "";
     for (let i = 0; i < str.length; i++) {
         // check this character is single char, get ascii and convert to 1..26 for a-z (other chars -> 0)
         if (isLetter(str.charAt(i).toLowerCase())) {
@@ -335,14 +315,23 @@ function encodeStr(str: string, img: number[], pixel: number): void {
             letter_binary = convertDecBin(num, 6);
             //basic.showString(">" + letter_binary + "<")
 
-            this_colour = encodePixel(letter_binary, currentImage[pixel + i]);
+            this_colour = encodePixel(letter_binary, stegImage[pixel + i]);
         }
         else
-            this_colour = encodePixel("000000", currentImage[pixel + i]);
-        currentImage[i] = this_colour;
+            this_colour = encodePixel("000000", stegImage[pixel + i]);
+        stegImage[i] = this_colour;
     }
 
-    showImageOnDisplay(currentImage);
+    displayImage(index, stegImage);
+}
+
+// display the next steganographic image on the Zip64 leds 
+function displayNextStegImage(): void {
+    let nextIndex = findNextIndex(currentIndex);
+    let nextImage = imagesArr[nextIndex];
+    let msg = steg_msgs[nextIndex];
+
+    displayStegImage(msg, nextIndex, nextImage, 0);
 }
 
 // --------------------------------------
@@ -505,9 +494,7 @@ namespace cryptsteg {
      */
     //% block="show next steganographic image"
     export function showNextStegImage(): void {
-        currentIndex++;
-        currentIndex = currentIndex % imagesArr.length;
-        encodeStr(steg_msgs[currentIndex], findEnum(currentIndex), 0);
+        displayNextStegImage();
     }
 
     // SHOW ENCRYPTED IMAGE
@@ -516,10 +503,10 @@ namespace cryptsteg {
      */
     //% block="show steganographic image $img"
     export function showStegImg(img: Images): void {
-        currentIndex = findIndex(img);     // update currentIndex to this image
-        encodeStr(steg_msgs[currentIndex], img, 0);
+        let index = findIndex(img);
+        let image = findImage(img);
+        displayStegImage(steg_msgs[index], index, image, 0);
     }
-
 
     // SHOW COLOUR
     /**
@@ -542,9 +529,7 @@ namespace cryptsteg {
      */
     //% block
     export function clearDisplay(): void {
-        display.clear();
-        display.show();
-        currentIndex = findIndex(Images.Black);
+        displayClear();
     }
 
     // SHOW NEXT IMAGE
@@ -553,20 +538,17 @@ namespace cryptsteg {
      */
     //% block
     export function showNextImage(): void {
-        currentImg = findNextImage(currentImg); // update current image
-        showImage(currentImg);
+        displayNextImage();
     }
 
     // SHOW IMAGE
     /**
-     * showImage displays the selected (original) image on the Zip64 leds
+     * showImage displays the selected image on the Zip64 leds
      * @param img the image to be displayed
      */
     //% block
     export function showImage(img: Images): void {
-        xxx currentIndex = findIndex(img);     // update currentIndex to this image
-        xxx
-        displayImage(currentImage);
+        displayImage(findIndex(img), findImage(img));
     }
 
 }
