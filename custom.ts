@@ -223,7 +223,7 @@ function displayClear(): void {
 
 // find the next index (based on length of images array)
 function findNextIndex(index: number): number {
-    let nextIndex = index++;
+    let nextIndex = index + 1;
     nextIndex = nextIndex % imagesArr.length;
     testing(nextIndex);
     return nextIndex;
@@ -234,7 +234,6 @@ function displayNextImage(): void {
     let nextIndex = findNextIndex(currentIndex);
     let nextImage = imagesArr[nextIndex];
 
-    testing(nextIndex);
     displayImage(nextIndex, nextImage);
 }
 
