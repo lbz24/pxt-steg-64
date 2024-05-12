@@ -128,9 +128,10 @@ const black = [
 const imagesArr = [heart, apple, dinosaur, pacman, ghost, alien, crown, stars, rainbow_vert, black];
 const namesArr = ["heart", "apple", "dinosaur", "pacman", "ghost", "alien", "crown", "stars", "rainbow", "black"];
 let currentIndex = 0;
+let currentImage = imagesArr[currentIndex];
 let currentPixel = 0;
 
-// set up enumeration type (helpful as parameter to functions below)
+// set up enumeration type (used in blocks)
 enum Images {
     //% block="heart"
     Heart,
@@ -154,34 +155,33 @@ enum Images {
     Black
 }
 
-// create (deep) copy of image - this is what will be displayed
-function copyImg(imgIndex: number): number[] {
-    let thisImg: number[] = [];
-    // reset the colours to those from original image (deep copy)
-    for (let i = 0; i < num_pixels; i++) {
-        thisImg[i] = imagesArr[imgIndex][i];
-    }
-    return thisImg;
-}
-
-/*
-// set up copies of images - to allow changes/resetting
-let heart = dc(findIndex(Images.Heart));
-let apple = dc(findIndex(Images.Apple));
-let dinosaur = dc(findIndex(Images.Dinosaur));
-let pacman = dc(findIndex(Images.Pacman));
-let ghost = dc(findIndex(Images.Ghost));
-let alien = dc(findIndex(Images.Alien));
-let crown = dc(findIndex(Images.Crown));
-let stars = dc(findIndex(Images.Stars));
-let rainbow = dc(findIndex(Images.Rainbow));
-let black = dc(findIndex(Images.Black));
-
-let imagesArr = [heart, apple, dinosaur, pacman, ghost, alien, crown, stars, rainbow, black];
-*/
 //--
 
-// internal function to find array index from the enumeration type
+// set a pixel colour on the Zip64 display
+function showRGBPixel(pixel: number, red: number, green: number, blue: number): void {
+    display.setPixelColor(pixel, neopixel.colors(neopixel.rgb(red, green, blue)))
+    display.show()
+}
+
+// find image from the enumeration type
+// note: tried Object.values and keys but "property does not exist"
+function findImg(img: Images): number[] {
+    switch (img) {
+        case Images.Heart: return heart;
+        case Images.Apple: return apple;
+        case Images.Dinosaur: return dinosaur;
+        case Images.Pacman: return pacman;
+        case Images.Ghost: return ghost;
+        case Images.Alien: return alien;
+        case Images.Crown: return crown;
+        case Images.Stars: return stars;
+        case Images.Rainbow: return rainbow_vert;
+        case Images.Black: return black;
+        default: return black;
+    }
+}
+
+// find array index from the enumeration type
 // note: tried Object.values and keys but "property does not exist"
 function findIndex(img: Images): number {
     switch (img) {
@@ -199,9 +199,10 @@ function findIndex(img: Images): number {
     }
 }
 
-// internal function to find enumeration type from the index
+
+// find enumeration type from the index
 // note: if parameter is -1 return the current image as default
-function findEnum(index: number): Images {
+/*function findEnum(index: number): Images {
     if (index === -1)
         index = currentIndex;
     switch (index) {
@@ -218,24 +219,53 @@ function findEnum(index: number): Images {
         default: return Images.Black;
     }
 }
+*/
 
-// internal function to support showColour block
-function showColourInt(pixel: number, red: number, green: number, blue: number): void {
-    display.setPixelColor(pixel, neopixel.colors(neopixel.rgb(red, green, blue)))
-    display.show()
+// create a (deep) copy of an image
+function copyImg(img: number[]): number[] {
+    let thisImg: number[] = [];
+    // reset the colours to those from original image (deep copy)
+    for (let i = 0; i < num_pixels; i++) {
+        thisImg[i] = img[i];
+    }
+    return thisImg;
 }
 
-// internal function to display an image by its index number on the Zip64 leds
-function showImageIndex(imgIndex: number): void {
-    let thisImg = imagesArr[imgIndex];
+// display an image on the Zip64 leds
+function displayImage(img: number[]): void {
     for (let i = 0; i < num_pixels; i++) {
-        display.setPixelColor(i, thisImg[i]);
+        display.setPixelColor(i, img[i]);
     }
     display.show();
-    //currentPixel = 0;       // used for moving around the image
+    //update current index and current image
+    currentImage = img;
+    
 }
 
-// internal function to return array with r,g,b components from the decimal colours
+// find the next index (based on length of images array)
+// note: doesn't update currentIndex or currentImage
+function findNextIndex(): number {
+    nextIndex = currentIndex++;
+    nextIndex = currentIndex % imagesArr.length;
+    return nextIndex;
+}
+
+// display the next image (from those images array) on the Zip64 leds
+function displayNextImage(): void {
+    displayImage(imagesArr[findNextIndex]);
+    for (let i = 0; i < num_pixels; i++) {
+        display.setPixelColor(i, img[i]);
+    }
+    display.show();
+}
+
+// display an image by its index number
+function showImageIndex(imgIndex: number): void {
+    let thisImg = imagesArr[imgIndex];
+    showImageOnDisplay(thisImg);
+}
+
+// return array with r,g,b components from the decimal colours
 function getRGB(colour: number): number[] {
     let r = Math.floor(colour / 256 / 256);
     let g = Math.floor(colour / 256) % 256;
@@ -263,7 +293,7 @@ const steg_msgs = [
     "social engineering analyst"
 ];
 
-// internal function to check if parameter is a single character
+// check if parameter is a single character
 function isLetter(s: string): boolean {
     if (s.length === 1) {
         return s.toLowerCase() != s.toUpperCase();
@@ -272,7 +302,7 @@ function isLetter(s: string): boolean {
         return false;
 }
 
-// internal function to support encode string
+// encode the binary string into the given colour (supports encode string)
 function encodePixel(letter_binary: string, pixel_colour: number): NeoPixelColors {
     // get rgb colour (as array) for given pixel of given image
     let rgb = getRGB(pixel_colour);  // rgb is array [r, g, b]
@@ -288,20 +318,13 @@ function encodePixel(letter_binary: string, pixel_colour: number): NeoPixelColor
         //basic.showString(">" + rgb[i] + "<")
     }
 
-    // return the new encoded values at the given pixel
+    // return the new colour that contains the encoded values 
     return neopixel.rgb(rgb[0], rgb[1], rgb[2]);
 }
 
-// encode string
-/**
- * encode the string in the given image, starting at the specified pixel value
- * @param str the string being hidden
- * @param img the image to be used
- * @param pixel the pixel at which to start
- */
-function encodeStr(str: string, img: Images, pixel: number): void {
-    currentIndex = findIndex(img);     // update currentIndex to this image
-    let img_copy = copyImg(currentIndex)
+// encode the string in the given image, starting at the specified pixel
+function encodeStr(str: string, img: number[], pixel: number): void {
+    currentImage = copyImg(img)
     let this_colour: NeoPixelColors
     let num = 0;
     let letter_binary = ""
@@ -312,24 +335,21 @@ function encodeStr(str: string, img: Images, pixel: number): void {
             letter_binary = convertDecBin(num, 6);
             //basic.showString(">" + letter_binary + "<")
 
-            this_colour = encodePixel(letter_binary, img_copy[pixel + i]);
+            this_colour = encodePixel(letter_binary, currentImage[pixel + i]);
         }
         else
-            this_colour = encodePixel("000000", img_copy[pixel + i]);
-        img_copy[i] = this_colour;
+            this_colour = encodePixel("000000", currentImage[pixel + i]);
+        currentImage[i] = this_colour;
     }
-    for (let i = 0; i < num_pixels; i++) {
-        display.setPixelColor(i, img_copy[i]);
-    }
-    display.show();
 
+    showImageOnDisplay(currentImage);
 }
 
 // --------------------------------------
 // functions relating to decimal <-> binary conversions
 // --------------------------------------
 
-// internal function to switch from binary to decimal
+// convert from binary number (as a string) to decimal
 // note: expected num is 0..63; returned str will be 6 bit binary
 function convertBinDec(bin_num: string): number {
     let multiplier = 1;
@@ -342,8 +362,8 @@ function convertBinDec(bin_num: string): number {
     return result;
 }
 
-// internal recursive function to convert decimal number to binary
-// note: returned binary number always has leading zero
+// convert from decimal number to binary string (recursively)
+// note: returned binary number should include all leading zeros
 // note: tried using toString with radix 2, but reported error (expected no parameter) 
 function recursiveDecBin(dec_num: number): string {
     if (dec_num === 0)
@@ -357,7 +377,8 @@ function recursiveDecBin(dec_num: number): string {
     }
 }
 
-// internal wrapper function for recursiveDecBin
+// convert from decimal number to binary string (recursively)
+// this is the wrapper function for recursiveDecBin
 // note: expected num bits is 6 or 8; returned str will be 6 or 8 bit binary
 function convertDecBin(dec_num: number, bits: number): string {
     if (bits === 6) {
@@ -423,7 +444,7 @@ GAME_ZIP64.onButtonPress(GAME_ZIP64.ZIP64ButtonPins.Fire2, GAME_ZIP64.ZIP64Butto
 })
 
 // --- CONTROL MOVEMENT ---
-
+// as user changes pixel position, temporarily highlight the new pixel position
 function tempHighlightPixel(): void {
     // get original colour of pixel
     let colour = imagesArr[currentIndex][currentPixel];
@@ -512,7 +533,7 @@ namespace cryptsteg {
     //% blue.min=0 blue.max=255 blue.defl=0
     //% inlineInputMode=inline
     export function showColour(pixel: number, red: number, green: number, blue: number): void {
-        showColourInt(pixel, red, green, blue);
+        showRGBPixel(pixel, red, green, blue);
     }
 
     // CLEAR DISPLAY
@@ -532,9 +553,8 @@ namespace cryptsteg {
      */
     //% block
     export function showNextImage(): void {
-        currentIndex++;
-        currentIndex = currentIndex % imagesArr.length;
-        showImageIndex(currentIndex);
+        currentImg = findNextImage(currentImg); // update current image
+        showImage(currentImg);
     }
 
     // SHOW IMAGE
@@ -544,8 +564,9 @@ namespace cryptsteg {
      */
     //% block
     export function showImage(img: Images): void {
-        currentIndex = findIndex(img);     // update currentIndex to this image
-        showImageIndex(currentIndex);
+        xxx currentIndex = findIndex(img);     // update currentIndex to this image
+        xxx
+        displayImage(currentImage);
     }
 
 }
