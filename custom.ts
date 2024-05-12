@@ -266,16 +266,16 @@ function getRGB(colour: number): number[] {
 
 // set up messages that will be hidden in each of the pre-defined images
 const steg_msgs = [
-    "cyber",
+    "lancaster",
     "forensic expert",
     "security analyst",
     "ethical hacker",
     "cyber psychologist",
-    "cyber ethics consultant",
+    "threat hunter",
     "security trainer",
     "risk assessor",
-    "threat hunter",
-    "social engineering analyst"
+    "cyber",
+    "ethics consultant"
 ];
 
 // check if parameter is a single character
