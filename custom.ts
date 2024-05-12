@@ -233,6 +233,7 @@ function displayNextImage(): void {
     let nextIndex = findNextIndex(currentIndex);
     let nextImage = imagesArr[nextIndex];
 
+    testing(nextIndex);
     displayImage(nextIndex, nextImage);
 }
 
