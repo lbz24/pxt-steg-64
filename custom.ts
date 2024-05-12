@@ -225,6 +225,7 @@ function displayClear(): void {
 function findNextIndex(index: number): number {
     let nextIndex = index++;
     nextIndex = nextIndex % imagesArr.length;
+    testing(nextIndex);
     return nextIndex;
 }
 
