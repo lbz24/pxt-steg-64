@@ -193,6 +193,12 @@ function findIndex(img: Images): number {
     }
 }
 
+function testing(num: number): void {
+    basic.showNumber(num);
+    basic.pause(100);
+    basic.clearScreen();
+}
+
 // display an image on the Zip64 leds
 // note: this updates the current index and the current image
 function displayImage(index: number, img: number[]): void {
@@ -204,6 +210,7 @@ function displayImage(index: number, img: number[]): void {
         display.setPixelColor(i, img[i]);
     }
     display.show();
+    testing(index);
 }
 
 // clears the Zip64 display (turns all leds black)
