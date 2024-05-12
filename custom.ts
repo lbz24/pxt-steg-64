@@ -210,7 +210,6 @@ function displayImage(index: number, img: number[]): void {
         display.setPixelColor(i, img[i]);
     }
     display.show();
-    testing(index);
 }
 
 // clears the Zip64 display (turns all leds black)
@@ -225,7 +224,6 @@ function displayClear(): void {
 function findNextIndex(index: number): number {
     let nextIndex = index + 1;
     nextIndex = nextIndex % imagesArr.length;
-    testing(nextIndex);
     return nextIndex;
 }
 
@@ -414,7 +412,7 @@ function convertDecBin(dec_num: number, bits: number): string {
 
 // -- TOP GREEN BTN: SHOW RGB COLOUR as string on MICRO:BIT --
 function showRGBcolour(): void {
-    let colour = imagesArr[currentIndex][currentPixel];
+    let colour = currentImage[currentPixel];
     let colour_array = getRGB(colour);
     basic.showString(colour_array[0] + "," + colour_array[1] + "," + colour_array[2], scrollSpeed);
 }
@@ -425,7 +423,7 @@ GAME_ZIP64.onButtonPress(GAME_ZIP64.ZIP64ButtonPins.Fire1, GAME_ZIP64.ZIP64Butto
 
 // -- BOTTOM GREEN BTN: SHOW 2 LSBs as BINARY string on MICRO:BIT --
 function get2LeastSig(): void {
-    let colour = imagesArr[currentIndex][currentPixel];
+    let colour = currentImage[currentPixel];
     let colour_array = getRGB(colour);  // rgb array: [r, g, b]
     let result = "";
     for (let i = 0; i < 3; i++) {
@@ -444,7 +442,7 @@ GAME_ZIP64.onButtonPress(GAME_ZIP64.ZIP64ButtonPins.Fire2, GAME_ZIP64.ZIP64Butto
 // as user changes pixel position, temporarily highlight the new pixel position
 function tempHighlightPixel(): void {
     // get original colour of pixel
-    let colour = imagesArr[currentIndex][currentPixel];
+    let colour = currentImage[currentPixel];
     let colour_array = getRGB(colour);
 
     // change pixel to white
