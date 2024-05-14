@@ -157,24 +157,6 @@ enum Images {
 
 //--
 
-// find image from the enumeration type
-// note: tried Object.values and keys but "property does not exist"
-function findImage(img: Images): number[] {
-    switch (img) {
-        case Images.Heart: return heart;
-        case Images.Apple: return apple;
-        case Images.Dinosaur: return dinosaur;
-        case Images.Pacman: return pacman;
-        case Images.Ghost: return ghost;
-        case Images.Alien: return alien;
-        case Images.Crown: return crown;
-        case Images.Stars: return stars;
-        case Images.Rainbow: return rainbow_vert;
-        case Images.Black: return black;
-        default: return black;
-    }
-}
-
 // find array index from the enumeration type
 // note: tried Object.values and keys but "property does not exist"
 function findIndex(img: Images): number {
@@ -193,10 +175,22 @@ function findIndex(img: Images): number {
     }
 }
 
-function testing(num: number): void {
-    basic.showNumber(num);
-    basic.pause(100);
-    basic.clearScreen();
+// find image from the enumeration type
+// note: tried Object.values and keys but "property does not exist"
+function findImage(img: Images): number[] {
+    switch (img) {
+        case Images.Heart: return heart;
+        case Images.Apple: return apple;
+        case Images.Dinosaur: return dinosaur;
+        case Images.Pacman: return pacman;
+        case Images.Ghost: return ghost;
+        case Images.Alien: return alien;
+        case Images.Crown: return crown;
+        case Images.Stars: return stars;
+        case Images.Rainbow: return rainbow_vert;
+        case Images.Black: return black;
+        default: return black;
+    }
 }
 
 // display an image on the Zip64 leds
@@ -213,11 +207,8 @@ function displayImage(index: number, img: number[]): void {
 }
 
 // clears the Zip64 display (turns all leds black)
-// note: this updates the current index and the current image
 function displayClear(): void {
-    currentIndex = findIndex(Images.Black);
-    currentImage = findImage(Images.Black);
-    displayImage(currentIndex, currentImage);
+    displayImage(findIndex(Images.Black), findImage(Images.Black));
 }
 
 // find the next index (based on length of images array)
@@ -411,14 +402,14 @@ function convertDecBin(dec_num: number, bits: number): string {
 // --- CONTROL GREEN BUTTONS ---
 
 // -- TOP GREEN BTN: SHOW RGB COLOUR as string on MICRO:BIT --
-function showRGBcolour(): void {
+function showRGBstring(): void {
     let colour = currentImage[currentPixel];
     let colour_array = getRGB(colour);
     basic.showString(colour_array[0] + "," + colour_array[1] + "," + colour_array[2], scrollSpeed);
 }
 
 GAME_ZIP64.onButtonPress(GAME_ZIP64.ZIP64ButtonPins.Fire1, GAME_ZIP64.ZIP64ButtonEvents.Click, function () {
-    showRGBcolour();
+    showRGBstring();
 })
 
 // -- BOTTOM GREEN BTN: SHOW 2 LSBs as BINARY string on MICRO:BIT --
@@ -501,6 +492,7 @@ namespace cryptsteg {
     //% block="show next steganographic image"
     export function showNextStegImage(): void {
         displayNextStegImage();
+        basic.showString('S');      // steganographic image
     }
 
     // SHOW ENCRYPTED IMAGE
@@ -512,6 +504,7 @@ namespace cryptsteg {
         let index = findIndex(img);
         let image = findImage(img);
         displayStegImage(steg_msgs[index], index, image, 0);
+        basic.showString('S');      // steganographic image
     }
 
     // SHOW COLOUR
@@ -545,6 +538,7 @@ namespace cryptsteg {
     //% block
     export function showNextImage(): void {
         displayNextImage();
+        basic.showString('N');      // normal image
     }
 
     // SHOW IMAGE
@@ -555,6 +549,7 @@ namespace cryptsteg {
     //% block
     export function showImage(img: Images): void {
         displayImage(findIndex(img), findImage(img));
+        basic.showString('N');      // normal image
     }
 
 }
