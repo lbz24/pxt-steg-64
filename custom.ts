@@ -499,7 +499,7 @@ namespace cryptsteg {
     //% block="show next steganographic image"
     export function showNextStegImage(): void {
         displayNextStegImage();
-        basicShow('h');      // hidden message (steganographic image)
+        basicShow('s');      // hidden message (steganographic image)
     }
 
     // SHOW ENCRYPTED IMAGE
@@ -511,7 +511,7 @@ namespace cryptsteg {
         let index = findIndex(img);
         let image = findImage(img);
         displayStegImage(steg_msgs[index], index, image, 0);
-        basicShow('h');      // hidden message (steganographic image)
+        basicShow('s');      // hidden message (steganographic image)
     }
 
     // SHOW COLOUR
