@@ -482,6 +482,13 @@ GAME_ZIP64.onButtonPress(GAME_ZIP64.ZIP64ButtonPins.Up, GAME_ZIP64.ZIP64ButtonEv
  */
 // --------------------------------------
 
+// show a character/ string temporarily on the micro:bit
+function basicShow(s:string): void{
+    basic.showString(s);
+    basic.pause(100);
+    basic.clearScreen();
+}
+
 //% color="#B39EF3" weight=115
 namespace cryptsteg {
 
@@ -492,7 +499,7 @@ namespace cryptsteg {
     //% block="show next steganographic image"
     export function showNextStegImage(): void {
         displayNextStegImage();
-        basic.showString('S');      // steganographic image
+        basic.showString('h');      // hidden message (steganographic image)
     }
 
     // SHOW ENCRYPTED IMAGE
@@ -504,7 +511,7 @@ namespace cryptsteg {
         let index = findIndex(img);
         let image = findImage(img);
         displayStegImage(steg_msgs[index], index, image, 0);
-        basic.showString('S');      // steganographic image
+        basic.showString('h');      // hidden message (steganographic image)
     }
 
     // SHOW COLOUR
@@ -538,7 +545,7 @@ namespace cryptsteg {
     //% block
     export function showNextImage(): void {
         displayNextImage();
-        basic.showString('N');      // normal image
+        basicShow('n');      // normal image
     }
 
     // SHOW IMAGE
@@ -549,7 +556,7 @@ namespace cryptsteg {
     //% block
     export function showImage(img: Images): void {
         displayImage(findIndex(img), findImage(img));
-        basic.showString('N');      // normal image
+        basicShow('n');      // normal image
     }
 
 }
