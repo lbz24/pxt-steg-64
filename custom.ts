@@ -19,7 +19,7 @@ const lbl = neopixel.rgb(0, 100, 152);    // light blue
 const bl = neopixel.rgb(0, 0, 152);       // blue
 const dbl = neopixel.rgb(0, 0, 52);       // dark blue
 const ind = neopixel.rgb(0, 0, 152);      // indigo (same as blue)
-const br = neopixel.rgb(32, 20, 0);    // brown
+const br = neopixel.rgb(32, 20, 0);       // brown
 const p = neopixel.rgb(152, 60, 152);     // pink
 const pu = neopixel.rgb(20, 0, 60);       // purple (violet)
 
