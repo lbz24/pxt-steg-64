@@ -4,24 +4,24 @@ let scrollSpeed = 200;  // scroll speed for show_string
 
 // set up colours used in pre-defined images
 // note: make each colour divisble by 4 => least 2 significant bits of the binary will be zero
-const w = neopixel.rgb(252, 252, 252);    // white
+const w = neopixel.rgb(180, 180, 180);    // white
 const b = neopixel.rgb(0, 0, 0);          // black
-const gr = neopixel.rgb(180, 180, 180);   // grey
-const dgr = neopixel.rgb(100, 100, 100);  // dark grey
+const gr = neopixel.rgb(52, 52, 52);      // grey
+const dgr = neopixel.rgb(16, 16, 16);     // dark grey
 const lr = neopixel.rgb(40, 0, 0);        // red
-const r = neopixel.rgb(252, 0, 0);        // red
-const o = neopixel.rgb(200, 100, 0);      // orange
-const y = neopixel.rgb(252, 252, 0);      // yellow
-const g = neopixel.rgb(0, 252, 0);        // green
-const lg = neopixel.rgb(180, 252, 0);     // light green
-const dg = neopixel.rgb(0, 60, 0);        // dark green
-const lbl = neopixel.rgb(52, 180, 252);   // light blue
-const bl = neopixel.rgb(0, 100, 152);     // blue
+const r = neopixel.rgb(152, 0, 0);        // red
+const o = neopixel.rgb(120, 60, 0);       // orange
+const y = neopixel.rgb(128, 128, 0);      // yellow
+const g = neopixel.rgb(0, 152, 0);        // green
+const lg = neopixel.rgb(100, 152, 0);     // light green
+const dg = neopixel.rgb(0, 52, 0);        // dark green
+const lbl = neopixel.rgb(0, 100, 152);    // light blue
+const bl = neopixel.rgb(0, 0, 152);       // blue
 const dbl = neopixel.rgb(0, 0, 52);       // dark blue
-const ind = neopixel.rgb(120, 120, 252);  // indigo
-const br = neopixel.rgb(160, 112, 12);    // brown
-const p = neopixel.rgb(252, 100, 252);    // pink
-const pu = neopixel.rgb(160, 32, 240);    // purple
+const ind = neopixel.rgb(0, 0, 152);      // indigo (same as blue)
+const br = neopixel.rgb(32, 20, 0);    // brown
+const p = neopixel.rgb(152, 60, 152);     // pink
+const pu = neopixel.rgb(20, 0, 60);       // purple (violet)
 
 // set up pre-defined images
 const heart = [
@@ -105,14 +105,14 @@ const stars = [
     b, b, b, b, b, b, b, b];
 
 const rainbow_vert = [
-    r, o, y, g, lbl, bl, ind, b,
-    r, o, y, g, lbl, bl, ind, b,
-    r, o, y, g, lbl, bl, ind, b,
-    r, o, y, g, lbl, bl, ind, b,
-    r, o, y, g, lbl, bl, ind, b,
-    r, o, y, g, lbl, bl, ind, b,
-    r, o, y, g, lbl, bl, ind, b,
-    r, o, y, g, lbl, bl, ind, b];
+    r, o, y, g, lbl, dbl, ind, b,
+    r, o, y, g, lbl, dbl, ind, b,
+    r, o, y, g, lbl, dbl, ind, b,
+    r, o, y, g, lbl, dbl, ind, b,
+    r, o, y, g, lbl, dbl, ind, b,
+    r, o, y, g, lbl, dbl, ind, b,
+    r, o, y, g, lbl, dbl, ind, b,
+    r, o, y, g, lbl, dbl, ind, b];
 
 const black = [
     b, b, b, b, b, b, b, b,
