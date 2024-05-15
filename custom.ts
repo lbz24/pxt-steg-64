@@ -105,14 +105,14 @@ const stars = [
     b, b, b, b, b, b, b, b];
 
 const rainbow_vert = [
-    r, o, y, g, lbl, dbl, ind, b,
-    r, o, y, g, lbl, dbl, ind, b,
-    r, o, y, g, lbl, dbl, ind, b,
-    r, o, y, g, lbl, dbl, ind, b,
-    r, o, y, g, lbl, dbl, ind, b,
-    r, o, y, g, lbl, dbl, ind, b,
-    r, o, y, g, lbl, dbl, ind, b,
-    r, o, y, g, lbl, dbl, ind, b];
+    r, o, y, g, lbl, dbl, pu, b,
+    r, o, y, g, lbl, dbl, pu, b,
+    r, o, y, g, lbl, dbl, pu, b,
+    r, o, y, g, lbl, dbl, pu, b,
+    r, o, y, g, lbl, dbl, pu, b,
+    r, o, y, g, lbl, dbl, pu, b,
+    r, o, y, g, lbl, dbl, pu, b,
+    r, o, y, g, lbl, dbl, pu, b];
 
 const black = [
     b, b, b, b, b, b, b, b,
